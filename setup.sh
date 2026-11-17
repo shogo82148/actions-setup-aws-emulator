@@ -27,8 +27,15 @@ cd "$RUNNER_TEMP"
 
 # download the package file
 curl -fsSLO "$BASE/$PACKAGE_FILE"
+curl -fsSLO "$BASE/$PACKAGE_FILE.sig"
 
-# TODO: verify the downloaded package file
+# verify the downloaded package file
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+GNUPGHOME="$(mktemp -d)"
+trap 'rm -rf "$GNUPGHOME"' EXIT
+export GNUPGHOME
+gpg --batch --quiet --import "$SCRIPT_DIR/aws-emulator-key.asc"
+gpg --batch --quiet --verify "$PACKAGE_FILE.sig" "$PACKAGE_FILE"
 
 # install the package file
 sudo apt-get install -y "./$PACKAGE_FILE"
