@@ -18,3 +18,20 @@ jobs:
       - name: Verify AWS Emulator
         run: |
           aws sts get-caller-identity
+
+  specific-version:
+    runs-on: ubuntu-26.04-arm
+    steps:
+      - name: Set up AWS Emulator
+        uses: $/
+        with:
+          aws-emulator-version: "1.0.497"
+
+      - name: Verify AWS Emulator
+        run: |
+          if aws-emulator --version | grep -q "1.0.497"; then
+            echo "AWS Emulator version is correct"
+          else
+            echo "AWS Emulator version is incorrect"
+            exit 1
+          fi
