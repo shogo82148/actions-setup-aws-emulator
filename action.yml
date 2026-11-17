@@ -1,0 +1,16 @@
+name: "Hello World"
+description: "Greet someone"
+inputs:
+  aws-emulator-version:
+    description: "AWS Emulator version"
+    required: true
+    default: "latest"
+outputs: {}
+runs:
+  using: "composite"
+  steps:
+    - name: Setup AWS Emulator
+      run: "${GITHUB_ACTION_PATH}/setup.sh"
+      shell: bash
+      env:
+        AWS_EMULATOR_VERSION: ${{ inputs.aws-emulator-version }}

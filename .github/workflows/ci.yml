@@ -1,0 +1,20 @@
+on:
+  push:
+  pull_request:
+
+jobs:
+  setup:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-26.04
+          - ubuntu-26.04-arm
+    steps:
+      - name: Set up AWS Emulator
+        uses: $/
+
+      - name: Verify AWS Emulator
+        run: |
+          aws sts get-caller-identity
