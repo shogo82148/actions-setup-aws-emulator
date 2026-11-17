@@ -25,9 +25,19 @@ PACKAGE_FILE=aws-emulator_${ARCH}.deb
 
 cd "$RUNNER_TEMP"
 
+# download the package file
 curl -fsSLO "$BASE/$PACKAGE_FILE"
+
+# TODO: verify the downloaded package file
+
+# install the package file
 sudo apt-get install -y "./$PACKAGE_FILE"
+
+echo "AWS Emulator version:" >&2
 aws-emulator -v
+
+# start the AWS Emulator in the background
+echo "Starting AWS Emulator..." >&2
 nohup aws-emulator > aws-emulator.log 2>&1 &
 
 for _ in $(seq 1 30); do
