@@ -40,8 +40,20 @@ aws-emulator -v
 echo "Starting AWS Emulator..." >&2
 nohup aws-emulator > aws-emulator.log 2>&1 &
 
-# wait for the AWS Emulator to become healthy
+# configure environment variables for the AWS Emulator
 CA="${HOME}/.aws/emulator/9297/ca.pem"
+(
+  echo "AWS_ENDPOINT_URL=https://127.0.0.1:9297"
+  echo "AWS_SHARED_CREDENTIALS_FILE=${HOME}/.aws/emulator/9297/emulator_credentials"
+  echo "AWS_CONFIG_FILE=${HOME}/.aws/emulator/9297/config"
+  echo "AWS_EMULATOR_CA=$CA"
+  echo "AWS_EC2_METADATA_DISABLED=true"
+  echo "AWS_DISABLE_HOST_PREFIX_INJECTION=true"
+  echo "AWS_REGION=us-east-1"
+  echo "AWS_DEFAULT_REGION=us-east-1"
+) >> "$GITHUB_ENV"
+
+# wait for the AWS Emulator to become healthy
 for _ in $(seq 1 30); do
   if curl -fs --cacert "$CA" https://127.0.0.1:9297/__admin/health >/dev/null 2>&1; then
     exit 0
