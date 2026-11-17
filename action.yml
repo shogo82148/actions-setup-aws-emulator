@@ -10,7 +10,7 @@ runs:
   using: "composite"
   steps:
     - name: Setup AWS Emulator
-      run: setup.sh
+      run: "${GITHUB_ACTION_PATH}/setup.sh"
       shell: bash
       env:
         AWS_EMULATOR_VERSION: ${{ inputs.aws-emulator-version }}
