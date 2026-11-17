@@ -40,8 +40,10 @@ aws-emulator -v
 echo "Starting AWS Emulator..." >&2
 nohup aws-emulator > aws-emulator.log 2>&1 &
 
+# wait for the AWS Emulator to become healthy
+CA="${HOME}/.aws/emulator/9297/ca.pem"
 for _ in $(seq 1 30); do
-  if curl -fs https://127.0.0.1:9297/__admin/health; then
+  if curl -fs --cacert "$CA" https://127.0.0.1:9297/__admin/health; then
     exit 0
   fi
   sleep 1
