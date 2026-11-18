@@ -6,6 +6,19 @@ if [ "${RUNNER_DEBUG:-}" = "1" ] ; then
   set -x
 fi
 
+AWS_EMULATOR_AUTH="${AWS_EMULATOR_AUTH:-on}"
+AWS_EMULATOR_TELEMETRY="${AWS_EMULATOR_TELEMETRY:-on}"
+for opt in "auth=$AWS_EMULATOR_AUTH" "telemetry=$AWS_EMULATOR_TELEMETRY"; do
+  case "${opt#*=}" in
+    on | off)
+      ;;
+    *)
+      echo "Invalid value for input '${opt%%=*}': '${opt#*=}' (expected 'on' or 'off')" >&2
+      exit 1
+      ;;
+  esac
+done
+
 ARCH=$(uname -m)
 case $ARCH in
   x86_64 | amd64)
@@ -50,13 +63,23 @@ aws-emulator -v
 
 # start the AWS Emulator in the background
 echo "Starting AWS Emulator..." >&2
-nohup aws-emulator > aws-emulator.log 2>&1 &
+nohup aws-emulator \
+  --auth "$AWS_EMULATOR_AUTH" \
+  --telemetry "$AWS_EMULATOR_TELEMETRY" \
+  > aws-emulator.log 2>&1 &
 
 # configure environment variables for the AWS Emulator
 CA="${HOME}/.aws/emulator/9297/ca.pem"
 (
   echo "AWS_ENDPOINT_URL=https://127.0.0.1:9297"
-  echo "AWS_SHARED_CREDENTIALS_FILE=${HOME}/.aws/emulator/9297/emulator_credentials"
+  if [ "$AWS_EMULATOR_AUTH" = "on" ]; then
+    echo "AWS_SHARED_CREDENTIALS_FILE=${HOME}/.aws/emulator/9297/emulator_credentials"
+  else
+    # The emulator does not write a credentials file when authentication is off,
+    # but SDKs and the AWS CLI still need some credentials to sign requests.
+    echo "AWS_ACCESS_KEY_ID=dummy"
+    echo "AWS_SECRET_ACCESS_KEY=dummy"
+  fi
   echo "AWS_CONFIG_FILE=${HOME}/.aws/emulator/9297/config"
   echo "AWS_EMULATOR_CA=$CA"
   echo "AWS_EC2_METADATA_DISABLED=true"

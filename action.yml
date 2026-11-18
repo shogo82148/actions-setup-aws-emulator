@@ -5,6 +5,18 @@ inputs:
     description: "AWS Emulator version"
     required: true
     default: "latest"
+  auth:
+    description: >-
+      Require SigV4 signatures with the emulator's generated keys ("on" or "off").
+      When "off", the emulator accepts any request, signed or not.
+    required: false
+    default: "on"
+  telemetry:
+    description: >-
+      Usage telemetry for the emulator ("on" or "off").
+      "off" always wins over EMULATOR_TELEMETRY and the config file; "on" cannot override them.
+    required: false
+    default: "on"
 outputs: {}
 runs:
   using: "composite"
@@ -14,3 +26,5 @@ runs:
       shell: bash
       env:
         AWS_EMULATOR_VERSION: ${{ inputs.aws-emulator-version }}
+        AWS_EMULATOR_AUTH: ${{ inputs.auth }}
+        AWS_EMULATOR_TELEMETRY: ${{ inputs.telemetry }}

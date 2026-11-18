@@ -42,3 +42,19 @@ jobs:
             echo "AWS Emulator version is incorrect: expected $expected, got $actual"
             exit 1
           fi
+
+  auth-and-telemetry-off:
+    runs-on: ubuntu-26.04-arm
+    timeout-minutes: 5
+    steps:
+      - name: Set up AWS Emulator
+        uses: $/
+        with:
+          auth: "off"
+          telemetry: "off"
+
+      - name: Verify AWS Emulator
+        run: |
+          aws sts get-caller-identity
+          grep -q "request authentication is off" "$RUNNER_TEMP/aws-emulator.log"
+          grep -q "telemetry: disabled" "$RUNNER_TEMP/aws-emulator.log"
