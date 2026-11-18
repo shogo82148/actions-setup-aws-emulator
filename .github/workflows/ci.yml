@@ -12,6 +12,7 @@ jobs:
         os:
           - ubuntu-26.04
           - ubuntu-26.04-arm
+    timeout-minutes: 5
     steps:
       - name: Set up AWS Emulator
         uses: $/
@@ -22,6 +23,7 @@ jobs:
 
   specific-version:
     runs-on: ubuntu-26.04-arm
+    timeout-minutes: 5
     steps:
       - name: Set up AWS Emulator
         uses: $/
