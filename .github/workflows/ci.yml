@@ -29,9 +29,13 @@ jobs:
 
       - name: Verify AWS Emulator
         run: |
-          if aws-emulator --version | grep -q "1.0.497"; then
+          expected="1.0.497"
+          output=$(aws-emulator --version)
+          echo "$output"
+          actual=$(echo "$output" | grep -oE '[0-9]+(\.[0-9]+)+' | head -n 1)
+          if [ "$actual" = "$expected" ]; then
             echo "AWS Emulator version is correct"
           else
-            echo "AWS Emulator version is incorrect"
+            echo "AWS Emulator version is incorrect: expected $expected, got $actual"
             exit 1
           fi
