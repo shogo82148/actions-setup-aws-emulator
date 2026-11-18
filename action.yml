@@ -1,5 +1,5 @@
-name: "Hello World"
-description: "Greet someone"
+name: "Setup AWS Emulator"
+description: "Install and start the AWS Emulator, and configure the AWS CLI and SDKs to use it"
 inputs:
   aws-emulator-version:
     description: "AWS Emulator version"
