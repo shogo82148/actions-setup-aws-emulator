@@ -1,6 +1,6 @@
 # actions-setup-aws-emulator
 
-Set up the AWS Emulator on GitHub Actions and configure the AWS CLI / SDKs to use it.
+Set up the [AWS Emulator](https://github.com/aws/aws-emulator) on GitHub Actions and configure the AWS CLI / SDKs to use it.
 
 ## Usage
 
