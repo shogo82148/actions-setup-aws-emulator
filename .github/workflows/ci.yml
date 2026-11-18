@@ -2,6 +2,7 @@ on:
   push:
   pull_request:
 
+permissions: {}
 jobs:
   setup:
     runs-on: ${{ matrix.os }}
