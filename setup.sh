@@ -22,6 +22,10 @@ esac
 
 BASE=https://downloads.aws.com/aws-emulator/packages/aws-emulator/LTS/latest
 PACKAGE_FILE=aws-emulator_${ARCH}.deb
+if [ "${AWS_EMULATOR_VERSION}" != "latest" ]; then
+  BASE=https://downloads.aws.com/aws-emulator/packages/aws-emulator/LTS
+  PACKAGE_FILE=aws-emulator_${AWS_EMULATOR_VERSION}-1_${ARCH}.deb
+fi
 
 cd "$RUNNER_TEMP"
 
@@ -39,6 +43,7 @@ gpg --batch --quiet --verify "$PACKAGE_FILE.sig" "$PACKAGE_FILE"
 
 # install the package file
 sudo apt-get install -y "./$PACKAGE_FILE"
+rm "$PACKAGE_FILE" "$PACKAGE_FILE.sig"
 
 echo "AWS Emulator version:" >&2
 aws-emulator -v
